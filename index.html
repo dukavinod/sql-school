@@ -157,12 +157,32 @@ GROUP BY user_id;</code></pre>
 					"description": "Test Transaction",
 					"image": "https://example.com/your_logo",
 					"order_id": "order_RwelyYb5B7fBdJ", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-					"handler": function (response){
-						alert(response.razorpay_payment_id);
-						alert(response.razorpay_order_id);
-						alert(response.razorpay_signature)
-					},
-					"prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information, especially their phone number
+					"handler": function (response) {
+								  fetch("/api/verify-payment", {
+								    method: "POST",
+								    headers: {
+								      "Content-Type": "application/json"
+								    },
+								    body: JSON.stringify({
+								      razorpay_payment_id: response.razorpay_payment_id,
+								      razorpay_order_id: response.razorpay_order_id,
+								      razorpay_signature: response.razorpay_signature
+								    })
+								  })
+								  .then(res => res.json())
+								  .then(data => {
+								    if (data.success) {
+								      alert("Payment successful!");
+								    } else {
+								      alert("Payment verification failed");
+								    }
+								  })
+								  .catch(err => {
+								    console.error(err);
+								    alert("Server error");
+								  });
+								},
+						"prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information, especially their phone number
 						"name": "<name>", //your customer's name
 						"email": "<email>", 
 						"contact": "<phone>"  //Provide the customer's phone number for better conversion rates 
@@ -196,4 +216,5 @@ GROUP BY user_id;</code></pre>
 
 </body>
 </html>
+
 
