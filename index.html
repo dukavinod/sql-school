@@ -147,6 +147,48 @@ GROUP BY user_id;</code></pre>
             <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
                 <a href="#practice" class="bg-blue-600 px-8 py-4 rounded-xl font-bold hover:bg-blue-700">Free Practice Now</a>
                 <button class="border-2 border-white px-8 py-4 rounded-xl font-bold hover:bg-white hover:text-gray-900">Book ₹49 Lesson</button>
+				<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+				<script>
+				var options = {
+					"key": "rzp_live_RwL8Ho8adGxGJK", // Enter the Key ID generated from the Dashboard
+					"amount": "500", // Amount is in currency subunits.
+					"currency": "INR",
+					"name": "SQL-School", //your business name
+					"description": "Test Transaction",
+					"image": "https://example.com/your_logo",
+					"order_id": "order_RwelyYb5B7fBdJ", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+					"handler": function (response){
+						alert(response.razorpay_payment_id);
+						alert(response.razorpay_order_id);
+						alert(response.razorpay_signature)
+					},
+					"prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information, especially their phone number
+						"name": "<name>", //your customer's name
+						"email": "<email>", 
+						"contact": "<phone>"  //Provide the customer's phone number for better conversion rates 
+					},
+					"notes": {
+						"address": "Razorpay Corporate Office"
+					},
+					"theme": {
+						"color": "#3399cc"
+					}
+				};
+				var rzp1 = new Razorpay(options);
+				rzp1.on('payment.failed', function (response){
+						alert(response.error.code);
+						alert(response.error.description);
+						alert(response.error.source);
+						alert(response.error.step);
+						alert(response.error.reason);
+						alert(response.error.metadata.order_id);
+						alert(response.error.metadata.payment_id);
+				});
+				document.getElementById('rzp-button1').onclick = function(e){
+					rzp1.open();
+					e.preventDefault();
+				}
+				</script>
             </div>
             <p class="text-gray-400">Hyderabad, India | Online Lessons [user-information]</p>
         </div>
@@ -154,4 +196,3 @@ GROUP BY user_id;</code></pre>
 
 </body>
 </html>
-
